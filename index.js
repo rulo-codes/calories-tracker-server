@@ -8,6 +8,11 @@ app.use(cors());
 
 const PORT = process.env.PORT || 5000;
 
+if (!process.env.API_CLIENT_ID || !process.env.API_CLIENT_SECRET) {
+  console.error("Missing FatSecret API credentials");
+  process.exit(1);
+}
+
 let clientID = process.env.API_CLIENT_ID;
 let clientSecret = process.env.API_CLIENT_SECRET
 
@@ -48,6 +53,10 @@ async function getAccessToken(){
     return accessToken;
 }
 
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
 app.get("/nutrition/search", async (req, res) => {
     try{
         const { query } = req.query;
@@ -69,12 +78,13 @@ app.get("/nutrition/search", async (req, res) => {
         const data = await response.json();
         res.json(data);
     } catch (error) {
-        res.status(500).json({ error: "Failed to get data"});
+        console.error(error.message);
+        res.status(500).json({ error: error.message });
     }
 
 });
 
 
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on ${PORT}`);
 });
