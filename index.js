@@ -67,7 +67,7 @@ app.get("/nutrition/search", async (req, res) => {
         const token = await getAccessToken();
 
         const response = await fetch(
-            `https://platform.fatsecret.com/rest/foods/search/v4?search_expression=${encodeURIComponent(query)}&format=json`,
+            `https://platform.fatsecret.com/rest/foods/search/v1?search_expression=${encodeURIComponent(query)}&format=json`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`
