@@ -59,16 +59,16 @@ app.get("/health", (req, res) => {
 
 app.get("/foods/search", async (req, res) => {
     try{
-        const { query } = req.query;
-        const { pageNumber} = req.page_number;
-        if (!query) {
+        const { query, page_number } = req.query;
+        const page = Number(page_number) || 0;
+        if (!query || !page_number) {
         return res.status(400).json({ error: "Missing query" });
         }
 
         const token = await getAccessToken();
 
         const response = await fetch(
-            `https://platform.fatsecret.com/rest/foods/search/v1?search_expression=${encodeURIComponent(query)}&page_number=${pageNumber ? pageNumber : 0}&format=json`,
+            `https://platform.fatsecret.com/rest/foods/search/v1?search_expression=${encodeURIComponent(query)}&page_number=${page}&format=json`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -87,16 +87,16 @@ app.get("/foods/search", async (req, res) => {
 
 app.get("/recipes/search", async (req, res) => {
     try{
-        const { query } = req.query;
-        const { pageNumber } = req.page_number;
-        if (!query || !pageNumber) {
+        const { query, page_number } = req.query;
+        const page = Number(page_number) || 0;
+        if (!query) {
         return res.status(400).json({ error: "Missing query" });
         }
 
         const token = await getAccessToken();
 
         const response = await fetch(
-            `https://platform.fatsecret.com/rest/recipes/search/v3?search_expression=${encodeURIComponent(query)}&page_number=${pageNumber ? pageNumber : 0}&format=json`,
+            `https://platform.fatsecret.com/rest/recipes/search/v3?search_expression=${encodeURIComponent(query)}&page_number=${page}&format=json`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`
